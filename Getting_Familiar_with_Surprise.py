@@ -8,20 +8,35 @@ Created on Sun Dec  9 13:22:39 2018
 # %% Load Packages
 from surprise import SVD
 from surprise import Dataset
+from surprise import Reader
 from surprise.model_selection import cross_validate
 
 import numpy as np
 import matplotlib.pyplot as plt
 
+import utils
+
 # %% Test the package code
 # Load the movielens-100k dataset (download it if needed),
-data = Dataset.load_builtin('ml-100k')
+data_ml100k = Dataset.load_builtin('ml-100k')
 
 # We'll use the famous SVD algorithm.
 algo = SVD()
 
 # Run 5-fold cross-validation and print results
-cross_validate(algo, data, measures=['RMSE', 'MAE'], cv=5, verbose=True)
+cross_validate(algo, data_ml100k, measures=['RMSE', 'MAE'], cv=5, verbose=True)
 
 # %% Load Project Dataset
+Path = "Data/data_train.csv"
+Data_train = utils.load_data(Path)
 
+# %% Load Project Dataset in a Surprise format
+# path to dataset file
+file_path = "Data/data_train.csv"
+
+# As we're loading a custom dataset, we need to define a reader. In the
+# movielens-100k dataset, each line has the following format:
+# 'user item rating timestamp', separated by '\t' characters.
+reader = Reader(line_format='item user rating', sep=',')
+
+data = Dataset.load_from_file(file_path, reader=reader)

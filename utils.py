@@ -5,9 +5,6 @@ Created on Sun Dec  9 13:36:56 2018
 
 @author: alireza
 """
-from itertools import groupby
-
-import numpy as np
 import scipy.sparse as sp
 
 # %% The function written in the helpers.py for Excersise 10
@@ -20,7 +17,7 @@ def read_txt(path):
 
 
 def load_data(path_dataset):
-    """Load data in text format, one rating per line, as in the kaggle competition."""
+    """Load data in text format, one rating per line."""
     data = read_txt(path_dataset)[1:]
     return preprocess_data(data)
 
@@ -51,31 +48,3 @@ def preprocess_data(data):
     for row, col, rating in data:
         ratings[row - 1, col - 1] = rating
     return ratings
-
-
-def group_by(data, index):
-    """group list of list by a specific index."""
-    sorted_data = sorted(data, key=lambda x: x[index])
-    groupby_data = groupby(sorted_data, lambda x: x[index])
-    return groupby_data
-
-
-def build_index_groups(train):
-    """build groups for nnz rows and cols."""
-    nz_row, nz_col = train.nonzero()
-    nz_train = list(zip(nz_row, nz_col))
-
-    grouped_nz_train_byrow = group_by(nz_train, index=0)
-    nz_row_colindices = [(g, np.array([v[1] for v in value]))
-                         for g, value in grouped_nz_train_byrow]
-
-    grouped_nz_train_bycol = group_by(nz_train, index=1)
-    nz_col_rowindices = [(g, np.array([v[0] for v in value]))
-                         for g, value in grouped_nz_train_bycol]
-    return nz_train, nz_row_colindices, nz_col_rowindices
-
-
-def calculate_mse(real_label, prediction):
-    """calculate MSE."""
-    t = real_label - prediction
-    return 1.0 * t.dot(t.T)
