@@ -24,13 +24,6 @@ def load_data(path_dataset):
 
 def preprocess_data(data):
     """preprocessing the text data, conversion to numerical array format."""
-    def deal_line(line):
-        pos, rating = line.split(',')
-        row, col = pos.split("_")
-        row = row.replace("r", "")
-        col = col.replace("c", "")
-        return int(row), int(col), float(rating)
-
     def statistics(data):
         row = set([line[0] for line in data])
         col = set([line[1] for line in data])
@@ -48,3 +41,19 @@ def preprocess_data(data):
     for row, col, rating in data:
         ratings[row - 1, col - 1] = rating
     return ratings
+
+
+# %% Load data in a desirable form for Surprise
+def deal_line(line):
+        pos, rating = line.split(",")
+        row, col = pos.split("_")
+        row = row.replace("r", "")
+        col = col.replace("c", "")
+        return int(row), int(col), float(rating)
+
+
+def load_data_desired(path_dataset):
+    """Load data in text format, one rating per line."""
+    data = read_txt(path_dataset)[1:]
+    data = [deal_line(line) for line in data]
+    return data
