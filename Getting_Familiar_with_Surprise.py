@@ -32,11 +32,7 @@ Data_train = utils.load_data(Path)
 
 # %% Load Project Dataset in a Surprise format
 # path to dataset file
-file_path = "Data/data_train.csv"
+file_path = "Data/data_train_Surprise_format.csv"
 
-# As we're loading a custom dataset, we need to define a reader. In the
-# movielens-100k dataset, each line has the following format:
-# 'user item rating timestamp', separated by '\t' characters.
-reader = Reader(line_format='item user rating', sep=',')
-
+reader = Reader(line_format='item user rating', sep=',',)
 data = Dataset.load_from_file(file_path, reader=reader)
