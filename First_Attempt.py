@@ -34,11 +34,12 @@ data_train = Dataset.load_from_file(file_path, reader=reader)
 
 # %% Hyper parameter tuning and CV analysis
 # Algorithm: SVD
-Hyper_Params = {'n_epochs': [10],
-                'n_factors': [50, 100, 150, 200],
+Hyper_Params = {'n_epochs': [10, 25, 50, 75, 100],
+                'n_factors': [50, 75, 100, 125, 150, 175],
                 'biased': [False],
                 'lr_all': [0.005],
-                'reg_all': [0.01, 0.1, 0.3, 1.0]}
+                'reg_pu': [0.001, 0.01, 0.06, 0.1, 0.12, 0.15],
+                'reg_qi': [0.001, 0.01, 0.06, 0.1, 0.12, 0.15]}
 
 Train_CV = Grid_Search_Result = model_selection.GridSearchCV(SVD,
                                                              Hyper_Params,
@@ -48,6 +49,7 @@ Train_CV = Grid_Search_Result = model_selection.GridSearchCV(SVD,
 Train_CV.fit(data_train)
 
 # %% Figures
+"""
 plt.figure(figsize=(20, 12))
 plt.rcParams.update({'font.size': 12})
 plt.plot(Train_CV.cv_results['param_reg_all'],
@@ -58,7 +60,7 @@ plt.ylabel('RMSE')
 plt.grid()
 plt.title('3-Fold CV - Regularization Parameter ($\lambda$)')
 plt.savefig('3_fold_CV_Reg_Param.png')
-
+"""
 plt.figure(figsize=(20, 12))
 plt.rcParams.update({'font.size': 12})
 plt.plot(Train_CV.cv_results['param_n_factors'],
@@ -75,8 +77,8 @@ alg = SVD()
 alg.biased = Grid_Search_Result.best_params['rmse']['biased']
 alg.n_epochs = Grid_Search_Result.best_params['rmse']['n_epochs']
 alg.n_factors = Grid_Search_Result.best_params['rmse']['n_factors']
-alg.reg_pu = Grid_Search_Result.best_params['rmse']['reg_all']
-alg.reg_qi = Grid_Search_Result.best_params['rmse']['reg_all']
+alg.reg_pu = Grid_Search_Result.best_params['rmse']['reg_pu']
+alg.reg_qi = Grid_Search_Result.best_params['rmse']['reg_qi']
 alg.lr_pu = Grid_Search_Result.best_params['rmse']['lr_all']
 alg.lr_qi = Grid_Search_Result.best_params['rmse']['lr_all']
 
