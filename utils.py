@@ -57,3 +57,55 @@ def load_data_desired(path_dataset):
     data = read_txt(path_dataset)[1:]
     data = [deal_line(line) for line in data]
     return data
+
+# preprocessing data, makes a csv file with the new data and returns the indices of this new data.
+def delete_users(path_dataset, min_num_items, num_users=1000):
+    """eliminates the inactive users from the original dataset.
+    Args:
+        min_num_items:
+            all users we keep should have rated at least min_num_items item.
+    Returns:
+        a csv file of the preprocesses data in the same format with the original data.
+        labels:
+            keeps the indices of the entries in the new csv file with respect to the original data.
+    """
+
+    def read_txt(path):
+        with open(path, "r") as f:
+            return f.read().splitlines()
+    data = read_txt(path_dataset)[1:]
+
+    def deal_line(line):
+        pos, rating = line.split(',')
+        row, col = pos.split("_")
+        row = row.replace("r", "")
+        col = col.replace("c", "")
+        return int(row), int(col), float(rating)
+
+    data2 = [deal_line(line) for line in data]
+    cnt_items_per_user = np.zeros(num_users)
+    for row, col, rating in data2:
+        cnt_items_per_user[col-1] += 1
+
+    data_new = []
+    labels = (-1) * np.ones(len(data))
+
+    cnt_deleted = 0
+    for i in range(len(data)):
+        ind1 = data[i].find('c')
+        ind2 = data[i].find(',')
+        if(cnt_items_per_user[int(data[i][ind1+1:ind2])-1] < min_num_items):
+            cnt_deleted += 1
+        else:
+            data_new.append(data[i])
+            labels[i] = int(i - cnt_deleted)
+
+    with open('preprocessed_data.csv', mode='w') as csv_file:
+        fieldnames = ['Id', 'Prediction']
+        writer = csv.DictWriter(csv_file, fieldnames=fieldnames)
+
+    writer.writeheader()
+    for i in range(len(data)):
+        writer.writerow({'Id': data_new[i][0:-2], 'Prediction': data_new[i]})
+
+    return labels
