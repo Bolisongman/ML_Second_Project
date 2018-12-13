@@ -34,10 +34,10 @@ data_train = Dataset.load_from_file(file_path, reader=reader)
 
 # %% Hyper parameter tuning and CV analysis
 Hyper_Params = {'n_epochs': [50],
-                'n_factors': [25],
+                'n_factors': [25,35,45],
                 'biased': [False],
-                'reg_pu': [0.1, 0.2, 0.3, 0.4],
-                'reg_qi': [0.1, 0.2, 0.3, 0.4]}
+                'reg_pu': [0.01,0.1,0.15,0.2],
+                'reg_qi': [0.01,0.1,0.15,0.2]}
 
 Train_CV = Grid_Search_Result = model_selection.GridSearchCV(NMF,
                                                              Hyper_Params,
@@ -57,19 +57,28 @@ plt.xlabel('Regularization Parameter ($\lambda$) - Qi')
 plt.ylabel('RMSE')
 plt.grid()
 plt.title('3-Fold CV - Regularization Parameter ($\lambda$) - Qi')
-plt.savefig('3_fold_CV_Reg_Param_NMF.png')
+plt.savefig('3_fold_CV_Reg_Param_NMF_Qi.png')
 
 plt.figure(figsize=(20, 12))
 plt.rcParams.update({'font.size': 12})
-plt.plot(Train_CV.cv_results['param_reg_pt'],
+plt.plot(Train_CV.cv_results['param_reg_pu'],
          Train_CV.cv_results['mean_test_rmse'], '.k')
 plt.xscale('log')
 plt.xlabel('Regularization Parameter ($\lambda$) - Pu')
 plt.ylabel('RMSE')
 plt.grid()
 plt.title('3-Fold CV - Regularization Parameter ($\lambda$) - Pu')
-plt.savefig('3_fold_CV_Reg_Param_NMF.png')
+plt.savefig('3_fold_CV_Reg_Param_NMF_Pu.png')
 
+plt.figure(figsize=(20, 12))
+plt.rcParams.update({'font.size': 12})
+plt.plot(Train_CV.cv_results['param_n_factors'],
+         Train_CV.cv_results['mean_test_rmse'], '.k')
+plt.xlabel('Number of Factors')
+plt.ylabel('RMSE')
+plt.grid()
+plt.title('3-Fold CV - Number of Factors')
+plt.savefig('3_fold_CV_Reg_Param_NMF_n_factors.png')
 
 # %% Best Hyper-parameters Training
 alg = NMF()
