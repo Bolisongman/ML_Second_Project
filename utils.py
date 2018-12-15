@@ -60,6 +60,19 @@ def load_data_desired(path_dataset):
     return data
 
 
+# A function for converting a project-csv file to surprise dataset format
+def convert_to_surprise_format(load_path, save_path='surprise_data.csv'):
+    data = load_data_desired(load_path)
+    file = open(save_path, "w")
+    file.write("Movie,Subject,Pediction\n")
+
+    for line in data:
+        temp = str(line[0]) + ',' + str(line[1]) + ',' + str(int(line[2])) + '\n'
+        file.write(temp)
+
+    file.close()
+
+
 # preprocessing data, makes a csv file with the new data and returns the
 # indices of this new data.
 def delete_users(path_dataset, min_num_items, num_users=1000):
