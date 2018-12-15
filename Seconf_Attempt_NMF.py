@@ -33,11 +33,18 @@ reader = Reader(line_format='item user rating', sep=',',
 data_train = Dataset.load_from_file(file_path, reader=reader)
 
 # %% Hyper parameter tuning and CV analysis
+"""
 Hyper_Params = {'n_epochs': [50],
-                'n_factors': [25,35,45],
+                'n_factors': [25,250,2500],
                 'biased': [False],
-                'reg_pu': [0.01,0.1,0.15,0.2],
-                'reg_qi': [0.01,0.1,0.15,0.2]}
+                'reg_pu': [0.01,0.1,0.3,1,3],
+                'reg_qi': [0.01,0.1,0.3,1,3]}
+"""
+Hyper_Params = {'n_epochs': [50],
+                'n_factors': [25,250,1000],
+                'biased': [False],
+                'reg_pu': [0.1,1,10],
+                'reg_qi': [0.1,1,10]}
 
 Train_CV = Grid_Search_Result = model_selection.GridSearchCV(NMF,
                                                              Hyper_Params,
@@ -103,6 +110,21 @@ for line in data_test:
 
 
 # %% Save Prediction
+file = open("Details.txt", "w")
+
+file.write("+ Best Score: \n \n")
+file.write(str(Train_CV.best_score) + "\n \n")
+file.write("************************************************************ \n")
+file.write("+ Best Param: \n \n")
+file.write(str(Train_CV.best_params) + "\n \n")
+file.write("************************************************************ \n")
+file.write("+ CV Summary: \n \n")
+file.write(str(Train_CV.cv_results) + "\n \n")
+file.write("************************************************************ \n")
+
+file.close()
+
+# %% Save Prediction
 file = open("testfile.csv", "w")
 file.write("Id,Prediction\n")
 
@@ -112,3 +134,6 @@ for i in range(len(Predict_Test)):
     file.write(temp)
 
 file.close()
+
+
+
