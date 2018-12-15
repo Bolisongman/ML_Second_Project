@@ -1,5 +1,0 @@
-{'rmse': {'n_epochs': 50,
-  'n_factors': 15,
-  'biased': False,
-  'reg_pu': 0.06,
-  'reg_qi': 0.2}}
