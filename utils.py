@@ -6,10 +6,11 @@ Created on Sun Dec  9 13:36:56 2018
 @author: alireza
 """
 import scipy.sparse as sp
+import numpy as np
+import csv
+
 
 # %% The function written in the helpers.py for Excersise 10
-
-
 def read_txt(path):
     """read text file from path."""
     with open(path, "r") as f:
@@ -58,16 +59,20 @@ def load_data_desired(path_dataset):
     data = [deal_line(line) for line in data]
     return data
 
-# preprocessing data, makes a csv file with the new data and returns the indices of this new data.
+
+# preprocessing data, makes a csv file with the new data and returns the
+# indices of this new data.
 def delete_users(path_dataset, min_num_items, num_users=1000):
     """eliminates the inactive users from the original dataset.
     Args:
-        min_num_items:
+        * min_num_items:
             all users we keep should have rated at least min_num_items item.
     Returns:
-        a csv file of the preprocesses data in the same format with the original data.
-        labels:
-            keeps the indices of the entries in the new csv file with respect to the original data.
+        * a csv file of the preprocesses data in the same format with
+            the original data - saved as preprocessed_data.csv
+        * labels:
+            keeps the indices of the entries in the new csv file with respect
+            to the original data.
     """
 
     def read_txt(path):
