@@ -33,13 +33,7 @@ reader = Reader(line_format='item user rating', sep=',',
 data_train = Dataset.load_from_file(file_path, reader=reader)
 
 # %% Hyper parameter tuning and CV analysis
-"""
-Hyper_Params = {'n_epochs': [50],
-                'n_factors': [25,250,2500],
-                'biased': [False],
-                'reg_pu': [0.01,0.1,0.3,1,3],
-                'reg_qi': [0.01,0.1,0.3,1,3]}
-"""
+
 Hyper_Params = {'n_epochs': [50],
                 'n_factors': [25,250,1000],
                 'biased': [False],

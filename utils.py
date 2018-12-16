@@ -59,8 +59,7 @@ def load_data_desired(path_dataset):
     data = [deal_line(line) for line in data]
     return data
 
-
-# A function for converting a project-csv file to surprise dataset format
+# %% A function for converting a project-csv file to surprise dataset format
 def convert_to_surprise_format(load_path, save_path='surprise_data.csv'):
     data = load_data_desired(load_path)
     file = open(save_path, "w")
@@ -72,8 +71,18 @@ def convert_to_surprise_format(load_path, save_path='surprise_data.csv'):
 
     file.close()
 
+# %% A function for Prior-correcting of prediction
+def Prior_Correction(Raw_Prediction, Noise_Var = 1, Prior = np.ones(5)/5):
+    Prior_Based_Pred = np.zeros((len(Raw_Prediction), 5))
 
-# preprocessing data, makes a csv file with the new data and returns the
+    for i in range(5):
+        Prior_Based_Pred[:, i] = Prior[i] *\
+            np.exp(-np.power((Raw_Prediction - (i + 1)), 2) / (2 * Noise_Var))
+
+    Prior_Based_Pred = np.argmax(Prior_Based_Pred, axis=1) + 1
+    return Prior_Based_Pred
+
+# %%  preprocessing data, makes a csv file with the new data and returns the
 # indices of this new data.
 def delete_users(path_dataset, min_num_items, num_users=1000,
                  save_path='preprocessed_data.csv'):

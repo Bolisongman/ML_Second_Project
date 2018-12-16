@@ -1,0 +1,15 @@
++ Best Score: 
+ 
+{'rmse': 1.0306242510885486}
+ 
+************************************************************ 
++ Best Param: 
+ 
+{'rmse': {'n_epochs': 50, 'n_factors': 7, 'biased': False, 'reg_pu': 0.1, 'reg_qi': 0.1}}
+ 
+************************************************************ 
++ CV Summary: 
+ 
+{'split0_test_rmse': array([1.10456742, 1.06246517, 1.04148072, 1.02999193]), 'split1_test_rmse': array([1.10732079, 1.06471101, 1.04336434, 1.03130419]), 'split2_test_rmse': array([1.10644963, 1.06375895, 1.04214883, 1.03057664]), 'mean_test_rmse': array([1.10611261, 1.06364504, 1.0423313 , 1.03062425]), 'std_test_rmse': array([0.00114904, 0.00092039, 0.00077973, 0.00053679]), 'rank_test_rmse': array([4, 3, 2, 1]), 'mean_fit_time': array([52.97853438, 60.54462632, 72.09632031, 69.54134464]), 'std_fit_time': array([10.96502016,  7.9774094 ,  6.88654476, 12.45041643]), 'mean_test_time': array([6.68856295, 7.88843266, 8.795796  , 6.27719235]), 'std_test_time': array([1.17674348, 0.31468988, 0.50504402, 1.14831297]), 'params': [{'n_epochs': 50, 'n_factors': 1, 'biased': False, 'reg_pu': 0.1, 'reg_qi': 0.1}, {'n_epochs': 50, 'n_factors': 3, 'biased': False, 'reg_pu': 0.1, 'reg_qi': 0.1}, {'n_epochs': 50, 'n_factors': 5, 'biased': False, 'reg_pu': 0.1, 'reg_qi': 0.1}, {'n_epochs': 50, 'n_factors': 7, 'biased': False, 'reg_pu': 0.1, 'reg_qi': 0.1}], 'param_n_epochs': [50, 50, 50, 50], 'param_n_factors': [1, 3, 5, 7], 'param_biased': [False, False, False, False], 'param_reg_pu': [0.1, 0.1, 0.1, 0.1], 'param_reg_qi': [0.1, 0.1, 0.1, 0.1]}
+ 
+************************************************************ 

@@ -1,0 +1,7 @@
+{'rmse': 1.0047048784540291}
+
+{'rmse': {'n_epochs': 50,
+  'n_factors': 35,
+  'biased': False,
+  'reg_pu': 0.07,
+  'reg_qi': 0.15}}
