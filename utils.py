@@ -82,6 +82,19 @@ def Prior_Correction(Raw_Prediction, Noise_Var = 1, Prior = np.ones(5)/5):
     Prior_Based_Pred = np.argmax(Prior_Based_Pred, axis=1) + 1
     return Prior_Based_Pred
 
+
+# %% Building K-ind for K-fold CV
+# This function had been already written by TAs for one of the Lab exersices
+def build_k_indices(y, k_fold, seed):
+    num_row = y.shape[0]
+    interval = int(num_row / k_fold)
+    np.random.seed(seed)
+    indices = np.random.permutation(num_row)
+    k_indices = [indices[k * interval: (k + 1) * interval]
+                 for k in range(k_fold)]
+    return np.array(k_indices)
+
+
 # %%  preprocessing data, makes a csv file with the new data and returns the
 # indices of this new data.
 def delete_users(path_dataset, min_num_items, num_users=1000,
