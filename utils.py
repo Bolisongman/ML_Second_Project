@@ -59,6 +59,7 @@ def load_data_desired(path_dataset):
     data = [deal_line(line) for line in data]
     return data
 
+
 # %% A function for converting a project-csv file to surprise dataset format
 def convert_to_surprise_format(load_path, save_path='surprise_data.csv'):
     data = load_data_desired(load_path)
@@ -71,8 +72,9 @@ def convert_to_surprise_format(load_path, save_path='surprise_data.csv'):
 
     file.close()
 
+
 # %% A function for Prior-correcting of prediction
-def Prior_Correction(Raw_Prediction, Noise_Var = 1, Prior = np.ones(5)/5):
+def Prior_Correction(Raw_Prediction, Noise_Var=1, Prior=np.ones(5)/5):
     Prior_Based_Pred = np.zeros((len(Raw_Prediction), 5))
 
     for i in range(5):

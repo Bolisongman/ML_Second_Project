@@ -1,0 +1,5 @@
+Slope-one:
+                  Fold 1  Fold 2  Fold 3  Mean    Std     
+RMSE (testset)    1.0027  1.0031  1.0028  1.0029  0.0002  
+Fit time          98.70   108.03  100.36  102.36  4.06    
+Test time         503.71  453.12  431.69  462.84  30.19   

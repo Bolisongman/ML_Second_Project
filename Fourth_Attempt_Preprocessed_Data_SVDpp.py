@@ -35,9 +35,9 @@ data_train = Dataset.load_from_file(file_path, reader=reader)
 # %% Hyper parameter tuning and CV analysis
 # Algorithm: SVD
 Hyper_Params = {'n_epochs': [50],
-                'n_factors': [15, 25, 35],
+                'n_factors': [25],
                 'lr_all': [0.005],
-                'reg_all': [0.001, 0.01, 0.1, 0.2, 0.3]}
+                'reg_all': [0.01, 0.1, 0.2, 0.3]}
 
 start = time.time()
 
