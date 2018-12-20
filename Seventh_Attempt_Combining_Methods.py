@@ -13,6 +13,8 @@ from surprise import Reader
 from surprise import NMF
 from surprise import SlopeOne
 from surprise import SVD
+from surprise import BaselineOnly
+from surprise import KNNBasic
 
 import time
 import random
@@ -20,8 +22,6 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 import utils
-
-from sklearn.linear_model import LinearRegression
 
 # %% Random Seed
 my_seed = 10
@@ -58,7 +58,7 @@ print(end - start)
 # %% Best Hyper-parameters Training - SVD
 alg_SVD = SVD()
 
-alg_SVD.biased = False
+alg_SVD.biased = True
 alg_SVD.n_epochs = 50
 alg_SVD.n_factors = 35
 alg_SVD.reg_pu = 0.1
@@ -86,6 +86,38 @@ print("***********************************************")
 print("Exe time:")
 print(end - start)
 
+# %% Best Hyper-parameters Training - KNN
+sim_options = {'name': 'msd',
+               'user_based': True  # compute  similarities between users
+               }
+alg_KNN = KNNBasic(sim_options=sim_options)
+
+start = time.time()
+
+alg_KNN.fit(data_train.build_full_trainset())
+
+end = time.time()
+print("***********************************************")
+print("Exe time:")
+print(end - start)
+
+# %% Best Hyper-parameters Training - Base Line
+bsl_options = {'method': 'als',
+               'n_epochs': 20,
+               'reg_u': 1,
+               'reg_i': 10}
+
+alg_BSL = BaselineOnly(bsl_options=bsl_options)
+
+start = time.time()
+
+alg_BSL.fit(data_train.build_full_trainset())
+
+end = time.time()
+print("***********************************************")
+print("Exe time:")
+print(end - start)
+
 # %% Loading Test Data
 file_path = "Data/sample_submission.csv"
 data_test = utils.load_data_desired(file_path)
@@ -94,9 +126,14 @@ data_test = utils.load_data_desired(file_path)
 Pred_Test_SVD = []
 Pred_Test_NMF = []
 Pred_Test_SL1 = []
+Pred_Test_KNN = []
+Pred_Test_BSL = []
 
 start = time.time()
 for line in data_test:
+    Pred_Test_KNN.append(alg_KNN.predict(str(line[1]),
+                                         str(line[0]), clip=False).est)
+
     Pred_Test_SVD.append(alg_SVD.predict(str(line[1]),
                                          str(line[0]), clip=False).est)
 
@@ -106,6 +143,9 @@ for line in data_test:
     Pred_Test_SL1.append(alg_SL1.predict(str(line[1]),
                                          str(line[0]), clip=False).est)
 
+    Pred_Test_BSL.append(alg_BSL.predict(str(line[1]),
+                                         str(line[0]), clip=False).est)
+
 end = time.time()
 print("***********************************************")
 print("Exe time:")
@@ -113,16 +153,24 @@ print(end - start)
 
 X_Test = np.matrix([Pred_Test_SVD,
                     Pred_Test_NMF,
-                    Pred_Test_SL1])
+                    Pred_Test_SL1,
+                    Pred_Test_KNN,
+                    Pred_Test_BSL])
 X_Test = X_Test.T
 
 # %% Prior Based
+X_Test = np.matrix([Pred_Test_SVD,
+                    Pred_Test_NMF,
+                    Pred_Test_SL1,
+                    Pred_Test_KNN])
+X_Test = X_Test.T
+
 Pred_Test = np.mean(X_Test,axis=1)
 Pred_Test = Pred_Test.A1
 Pred_Test = utils.Prior_Correction(Pred_Test)
 
-# %% Save Prediction
-file = open("testfile.csv", "w")
+# #%% Save Prediction
+file = open("SVD_BSL_NMF_SL1.csv", "w")
 file.write("Id,Prediction\n")
 
 for i in range(len(Pred_Test)):

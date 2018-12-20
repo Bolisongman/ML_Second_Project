@@ -39,8 +39,8 @@ data_train = Dataset.load_from_file(file_path, reader=reader)
 Hyper_Params = {'bsl_options':
                 {'method': ['als'],
                 'n_epochs': [20],
-                'reg_u': [0.001, 0.01, 0.1],
-                'reg_i': [0.001, 0.01, 0.1]}}
+                'reg_u': [1, 3, 10],
+                'reg_i': [1, 3, 10]}}
 
 start = time.time()
 Train_CV = Grid_Search_Result = model_selection.GridSearchCV(BaselineOnly,
@@ -90,10 +90,10 @@ plt.grid()
 plt.title('3-Fold CV - Regularization Parameter ($\lambda$) - bu')
 plt.savefig('3_fold_CV_Reg_Param_Baseline_bu.png')
 
-# %% Best Hyper-parameters Training
-alg = BaselineOnly
 
-alg.bsl_options = Grid_Search_Result.best_params['rmse']['bsl_options']
+# %% Best Hyper-parameters Training
+alg = BaselineOnly(bsl_options=
+                   Grid_Search_Result.best_params['rmse']['bsl_options'])
 
 start = time.time()
 
@@ -131,6 +131,7 @@ file.write("************************************************************ \n")
 file.close()
 
 # %% Save Prediction
+
 file = open("testfile.csv", "w")
 file.write("Id,Prediction\n")
 

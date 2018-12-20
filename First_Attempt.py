@@ -34,33 +34,46 @@ data_train = Dataset.load_from_file(file_path, reader=reader)
 
 # %% Hyper parameter tuning and CV analysis
 # Algorithm: SVD
-Hyper_Params = {'n_epochs': [10, 25, 50, 75, 100],
-                'n_factors': [50, 75, 100, 125, 150, 175],
-                'biased': [False],
+Hyper_Params = {'n_epochs': [100],
+                'n_factors': [25],
+                'biased': [True],
                 'lr_all': [0.005],
-                'reg_pu': [0.001, 0.01, 0.06, 0.1, 0.12, 0.15],
-                'reg_qi': [0.001, 0.01, 0.06, 0.1, 0.12, 0.15]}
+                'reg_pu': [0.1],
+                'reg_qi': [0.1],
+                'reg_bi': [0.3],
+                'reg_bu': [0.01]}
 
 Train_CV = Grid_Search_Result = model_selection.GridSearchCV(SVD,
                                                              Hyper_Params,
-                                                             measures=['rmse', 'mae'],
+                                                             measures=['rmse'],
                                                              cv=3, n_jobs=3)
 
 Train_CV.fit(data_train)
 
 # %% Figures
-"""
+
 plt.figure(figsize=(20, 12))
 plt.rcParams.update({'font.size': 12})
-plt.plot(Train_CV.cv_results['param_reg_all'],
+plt.plot(Train_CV.cv_results['param_reg_bi'],
          Train_CV.cv_results['mean_test_rmse'], '.k')
 plt.xscale('log')
 plt.xlabel('Regularization Parameter ($\lambda$)')
 plt.ylabel('RMSE')
 plt.grid()
 plt.title('3-Fold CV - Regularization Parameter ($\lambda$)')
-plt.savefig('3_fold_CV_Reg_Param.png')
-"""
+plt.savefig('3_fold_CV_Reg_Param_bi.png')
+
+plt.figure(figsize=(20, 12))
+plt.rcParams.update({'font.size': 12})
+plt.plot(Train_CV.cv_results['param_reg_bu'],
+         Train_CV.cv_results['mean_test_rmse'], '.k')
+plt.xscale('log')
+plt.xlabel('Regularization Parameter ($\lambda$)')
+plt.ylabel('RMSE')
+plt.grid()
+plt.title('3-Fold CV - Regularization Parameter ($\lambda$)')
+plt.savefig('3_fold_CV_Reg_Param_bu.png')
+
 plt.figure(figsize=(20, 12))
 plt.rcParams.update({'font.size': 12})
 plt.plot(Train_CV.cv_results['param_n_factors'],
@@ -79,6 +92,8 @@ alg.n_epochs = Grid_Search_Result.best_params['rmse']['n_epochs']
 alg.n_factors = Grid_Search_Result.best_params['rmse']['n_factors']
 alg.reg_pu = Grid_Search_Result.best_params['rmse']['reg_pu']
 alg.reg_qi = Grid_Search_Result.best_params['rmse']['reg_qi']
+alg.reg_bu = Grid_Search_Result.best_params['rmse']['reg_bu']
+alg.reg_bi = Grid_Search_Result.best_params['rmse']['reg_bi']
 alg.lr_pu = Grid_Search_Result.best_params['rmse']['lr_all']
 alg.lr_qi = Grid_Search_Result.best_params['rmse']['lr_all']
 
@@ -96,7 +111,23 @@ for line in data_test:
 
 
 # %% Save Prediction
-file = open("testfile.csv","w")
+file = open("Details.txt", "w")
+
+file.write("+ Best Score: \n \n")
+file.write(str(Train_CV.best_score) + "\n \n")
+file.write("************************************************************ \n")
+file.write("+ Best Param: \n \n")
+file.write(str(Train_CV.best_params) + "\n \n")
+file.write("************************************************************ \n")
+file.write("+ CV Summary: \n \n")
+file.write(str(Train_CV.cv_results) + "\n \n")
+file.write("************************************************************ \n")
+
+file.close()
+
+
+# %% Save Prediction
+file = open("SVD_Biased.csv","w")
 file.write("Id,Prediction\n")
 
 for i in range(len(Predict_Test)):

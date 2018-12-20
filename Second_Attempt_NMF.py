@@ -35,10 +35,10 @@ data_train = Dataset.load_from_file(file_path, reader=reader)
 # %% Hyper parameter tuning and CV analysis
 
 Hyper_Params = {'n_epochs': [50],
-                'n_factors': [25,250,1000],
-                'biased': [False],
-                'reg_pu': [0.1,1,10],
-                'reg_qi': [0.1,1,10]}
+                'n_factors': [25],
+                'biased': [True],
+                'reg_pu': [0.1],
+                'reg_qi': [0.1]}
 
 Train_CV = Grid_Search_Result = model_selection.GridSearchCV(NMF,
                                                              Hyper_Params,

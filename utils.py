@@ -1,15 +1,10 @@
-#!/usr/bin/env python3
-# -*- coding: utf-8 -*-
-"""
-Created on Sun Dec  9 13:36:56 2018
-
-@author: alireza
-"""
+# *****************************************************************************
 import scipy.sparse as sp
 import numpy as np
 import csv
 
 
+# *****************************************************************************
 # %% The function written in the helpers.py for Excersise 10
 def read_txt(path):
     """read text file from path."""
@@ -44,8 +39,11 @@ def preprocess_data(data):
     return ratings
 
 
+# *****************************************************************************
 # %% Load data in a desirable form for Surprise
 def deal_line(line):
+    """extracting the information from a line of datasets in the format of
+       the project datasets."""
     pos, rating = line.split(",")
     row, col = pos.split("_")
     row = row.replace("r", "")
@@ -60,8 +58,17 @@ def load_data_desired(path_dataset):
     return data
 
 
+# *****************************************************************************
 # %% A function for converting a project-csv file to surprise dataset format
 def convert_to_surprise_format(load_path, save_path='surprise_data.csv'):
+    """Converting a dataset with project format to a dataset with the structure
+        of Surprise package.
+    Args:
+        * load path
+        * save path
+    Returns:
+        * -
+    """
     data = load_data_desired(load_path)
     file = open(save_path, "w")
     file.write("Movie,Subject,Pediction\n")
@@ -73,8 +80,17 @@ def convert_to_surprise_format(load_path, save_path='surprise_data.csv'):
     file.close()
 
 
+# *****************************************************************************
 # %% A function for Prior-correcting of prediction
 def Prior_Correction(Raw_Prediction, Noise_Var=1, Prior=np.ones(5)/5):
+    """Estimating the integer rating using the predicted continous one
+    Args:
+        * Raw_Prediction: continous prediction of ratings
+        * Nois_Var: variance of noise
+        * Prior: prior distribution over integer ratings
+    Returns:
+        * Integer predictions
+    """
     Prior_Based_Pred = np.zeros((len(Raw_Prediction), 5))
 
     for i in range(5):
@@ -84,10 +100,18 @@ def Prior_Correction(Raw_Prediction, Noise_Var=1, Prior=np.ones(5)/5):
     Prior_Based_Pred = np.argmax(Prior_Based_Pred, axis=1) + 1
     return Prior_Based_Pred
 
-
+# *****************************************************************************
 # %% Building K-ind for K-fold CV
 # This function had been already written by TAs for one of the Lab exersices
 def build_k_indices(y, k_fold, seed):
+    """Generating k set of indexes for K-fold CV.
+    Args:
+        * y: labels
+        * k_fold: number of folds
+        * seed: random seed
+    Returns:
+        * List of k_fold arrays of indexes
+    """
     num_row = y.shape[0]
     interval = int(num_row / k_fold)
     np.random.seed(seed)
@@ -97,6 +121,7 @@ def build_k_indices(y, k_fold, seed):
     return np.array(k_indices)
 
 
+# *****************************************************************************
 # %%  preprocessing data, makes a csv file with the new data and returns the
 # indices of this new data.
 def delete_users(path_dataset, min_num_items, num_users=1000,

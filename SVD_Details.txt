@@ -1,0 +1,15 @@
++ Best Score: 
+ 
+{'rmse': 0.9915309438947641}
+ 
+************************************************************ 
++ Best Param: 
+ 
+{'rmse': {'n_epochs': 300, 'n_factors': 25, 'biased': True, 'lr_all': 0.005, 'reg_pu': 0.1, 'reg_qi': 0.1, 'reg_bi': 0.3, 'reg_bu': 0.01, 'verbose': True}}
+ 
+************************************************************ 
++ CV Summary: 
+ 
+{'split0_test_rmse': array([0.99224244]), 'split1_test_rmse': array([0.99162426]), 'split2_test_rmse': array([0.99072613]), 'mean_test_rmse': array([0.99153094]), 'std_test_rmse': array([0.00062254]), 'rank_test_rmse': array([1]), 'mean_fit_time': array([491.79580728]), 'std_fit_time': array([4.92113698]), 'mean_test_time': array([6.0416979]), 'std_test_time': array([1.01579512]), 'params': [{'n_epochs': 300, 'n_factors': 25, 'biased': True, 'lr_all': 0.005, 'reg_pu': 0.1, 'reg_qi': 0.1, 'reg_bi': 0.3, 'reg_bu': 0.01, 'verbose': True}], 'param_n_epochs': [300], 'param_n_factors': [25], 'param_biased': [True], 'param_lr_all': [0.005], 'param_reg_pu': [0.1], 'param_reg_qi': [0.1], 'param_reg_bi': [0.3], 'param_reg_bu': [0.01], 'param_verbose': [True]}
+ 
+************************************************************ 
